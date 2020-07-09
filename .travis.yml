@@ -6,6 +6,12 @@ matrix:
   include:
     - os: windows
       language: sh
+      before_install:
+        - choco install python --version=3.8.3 --forcex86
+    - os: windows
+      language: sh
+      before_install:
+        - choco install python --version=3.8.3
     - os: linux
       language: python
       python: 3.8
