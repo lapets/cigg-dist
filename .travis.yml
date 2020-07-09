@@ -8,10 +8,12 @@ matrix:
       language: sh
       before_install:
         - choco install python --version=3.8.3 --forcex86
+        - python --version
     - os: windows
       language: sh
       before_install:
         - choco install python --version=3.8.3
+        - python --version
     - os: linux
       language: python
       python: 3.8
