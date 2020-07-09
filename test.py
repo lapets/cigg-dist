@@ -6,7 +6,8 @@ import canaries
 lib = canaries.load({
     'Linux': ['./cigg.linux.64.so'],
     'Darwin': ['./cigg.macos.64.so'],
-    'Windows': ['./cigg.win.64.dll']
+    'Windows': ['./cigg.win.64.dll'],
+    'Windows32': ['./cigg.win.32.dll']
 })
 
 assert(lib is not None)
