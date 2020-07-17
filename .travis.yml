@@ -5,22 +5,34 @@ notifications:
 matrix:
   include:
     - os: windows
-      language: sh
-      before_install:
-        - choco install python --version=3.8.3 --forcex86
-        - python --version
+      arch: amd64
+      language: shell
+      before_install: choco install python --version=3.8.3 --forcex86
       env: PATH=/c/Python38:/c/Python38/Scripts:$PATH
     - os: windows
-      language: sh
-      before_install:
-        - choco install python --version=3.8.3
-        - python --version
+      arch: i386
+      language: shell
+      before_install: choco install python --version=3.8.3
       env: PATH=/c/Python38:/c/Python38/Scripts:$PATH
     - os: linux
+      dist: xenial
+      arch: amd64
       language: python
-      python: 3.8
+      python: "3.8"
+    - os: linux
+      dist: xenial
+      arch: i386
+      language: python
+      python: "3.8"
     - os: osx
+      arch: amd64
       language: generic
-script:
-  - wget https://raw.githubusercontent.com/reity/canaries/master/canaries/canaries.py
-  - python test.py
+      before_install:
+        - wget https://raw.githubusercontent.com/wyatt-howe/python-3.8.3-darwin/master/python-3.8.3-darwin.tar.bz2
+        - sudo tar xjf python-3.8.3-darwin.tar.bz2 --directory /  # install python from homebrew compatible archive
+        - sudo cp /usr/local/Cellar/python@3.8/3.8.3/bin/python3.8 /usr/local/bin/python  # overwrite the v2 link with v3.8
+install:
+  - python --version
+  - python -c 'from sys import maxsize; print("i386" if maxsize == 2**31-1 else "amd64")'
+  - python -m pip install -r requirements.txt
+script: python test.py
