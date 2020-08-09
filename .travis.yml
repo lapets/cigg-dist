@@ -10,17 +10,47 @@ matrix:
         - choco install python --version=3.8.3 --forcex86
         - python --version
       env: PATH=/c/Python38:/c/Python38/Scripts:$PATH
+      script:
+        - wget https://raw.githubusercontent.com/reity/canaries/master/canaries/canaries.py
+        - python test.py
     - os: windows
       language: sh
       before_install:
         - choco install python --version=3.8.3
         - python --version
       env: PATH=/c/Python38:/c/Python38/Scripts:$PATH
+      script:
+        - wget https://raw.githubusercontent.com/reity/canaries/master/canaries/canaries.py
+        - python test.py
     - os: linux
       language: python
       python: 3.8
+      script:
+        - wget https://raw.githubusercontent.com/reity/canaries/master/canaries/canaries.py
+        - python test.py
     - os: osx
       language: generic
-script:
-  - wget https://raw.githubusercontent.com/reity/canaries/master/canaries/canaries.py
-  - python test.py
+      before_cache:
+        - brew cleanup
+        - find /usr/local/Homebrew \! -regex ".+\.git.+" -delete
+      cache:
+        ccache: true
+        directories:
+          - $HOME/Library/Caches/Homebrew
+          - /usr/local/Homebrew
+      env: PYTHON=3.8.3
+      before_install:
+        - brew update
+        - brew install ccache
+        - brew install openssl readline
+        - brew outdated pyenv || brew upgrade pyenv
+        - brew install pyenv-virtualenv
+        - sudo pyenv install $PYTHON
+        - export PYENV_VERSION=$PYTHON
+        - export PATH="/Users/travis/.pyenv/shims:${PATH}"
+        - sudo pyenv virtualenv 3.8.3 venv
+        - sudo python3.8 -m pip install -U pip
+        - sudo python3.8 -m pip install setuptools
+      script:
+        - wget https://raw.githubusercontent.com/reity/canaries/master/canaries/canaries.py
+        - python3.8 test.py
