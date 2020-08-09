@@ -37,12 +37,7 @@ matrix:
         - brew update
         - brew install ccache
         - brew install openssl readline
-        - brew install pyenv-virtualenv
-      script:
-        - sudo pyenv install 3.8.3
-        - export PYENV_VERSION=3.8.3
-        - export PATH="/Users/travis/.pyenv/shims:${PATH}"
-        - sudo -H pyenv virtualenv 3.8.3 venv
+        - brew upgrade python@3.8
         - sudo -H python3.8 -m pip install -U pip
         - sudo -H python3.8 -m pip install canaries
-        - sudo -H python3.8 test.py
+      script: python3.8 test.py
