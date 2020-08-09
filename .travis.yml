@@ -33,16 +33,15 @@ matrix:
         directories:
           - $HOME/Library/Caches/Homebrew
           - /usr/local/Homebrew
-      env: PYTHON=3.8.3
       before_install:
         - brew update
         - brew install ccache
         - brew install openssl readline
         - brew install pyenv-virtualenv
-        - sudo pyenv install $PYTHON
-        - export PYENV_VERSION=$PYTHON
-        - export PATH="/Users/travis/.pyenv/shims:${PATH}"
       script:
+        - sudo pyenv install 3.8.3
+        - export PYENV_VERSION=3.8.3
+        - export PATH="/Users/travis/.pyenv/shims:${PATH}"
         - sudo -H pyenv virtualenv 3.8.3 venv
         - sudo -H python3.8 -m pip install -U pip
         - sudo -H python3.8 -m pip install canaries
