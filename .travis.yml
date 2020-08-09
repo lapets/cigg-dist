@@ -8,26 +8,21 @@ matrix:
       language: sh
       before_install:
         - choco install python --version=3.8.3 --forcex86
-        - python --version
+        - pip install canaries
       env: PATH=/c/Python38:/c/Python38/Scripts:$PATH
-      script:
-        - wget https://raw.githubusercontent.com/reity/canaries/master/canaries/canaries.py
-        - python test.py
+      script: python test.py
     - os: windows
       language: sh
       before_install:
         - choco install python --version=3.8.3
-        - python --version
+        - pip install canaries
       env: PATH=/c/Python38:/c/Python38/Scripts:$PATH
-      script:
-        - wget https://raw.githubusercontent.com/reity/canaries/master/canaries/canaries.py
-        - python test.py
+      script: python test.py
     - os: linux
       language: python
       python: 3.8
-      script:
-        - wget https://raw.githubusercontent.com/reity/canaries/master/canaries/canaries.py
-        - python test.py
+      before_install: pip install canaries
+      script: python test.py
     - os: osx
       language: generic
       before_cache:
@@ -51,6 +46,5 @@ matrix:
         - sudo pyenv virtualenv 3.8.3 venv
         - sudo python3.8 -m pip install -U pip
         - sudo python3.8 -m pip install setuptools
-      script:
-        - wget https://raw.githubusercontent.com/reity/canaries/master/canaries/canaries.py
-        - python3.8 test.py
+        - sudo python3.8 -m pip install canaries
+      script: python3.8 test.py
