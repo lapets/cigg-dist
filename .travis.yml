@@ -7,32 +7,64 @@ matrix:
     - os: windows
       arch: amd64
       language: shell
-      before_install: choco install python --version=3.8.3 --forcex86
+      before_install:
+        - choco install python --version=3.8.3 --forcex86
+        - pip install -r requirements.txt
+      install:
+        - python --version
+        - python -c 'from sys import maxsize; print("i386" if maxsize == 2**31-1 else "amd64")'
       env: PATH=/c/Python38:/c/Python38/Scripts:$PATH
+      script: python test.py
     - os: windows
       arch: i386
       language: shell
-      before_install: choco install python --version=3.8.3
+      before_install:
+        - choco install python --version=3.8.3
+        - pip install -r requirements.txt
+      install:
+        - python --version
+        - python -c 'from sys import maxsize; print("i386" if maxsize == 2**31-1 else "amd64")'
       env: PATH=/c/Python38:/c/Python38/Scripts:$PATH
+      script: python test.py
     - os: linux
       dist: xenial
       arch: amd64
       language: python
-      python: "3.8"
+      python: 3.8
+      before_install: pip install -r requirements.txt
+      install:
+        - python --version
+        - python -c 'from sys import maxsize; print("i386" if maxsize == 2**31-1 else "amd64")'
+      script: python test.py
     - os: linux
       dist: xenial
       arch: i386
       language: python
-      python: "3.8"
+      python: 3.8
+      before_install: pip install -r requirements.txt
+      install:
+        - python --version
+        - python -c 'from sys import maxsize; print("i386" if maxsize == 2**31-1 else "amd64")'
+      script: python test.py
     - os: osx
       arch: amd64
       language: generic
+      before_cache:
+        - brew cleanup
+        - find /usr/local/Homebrew \! -regex ".+\.git.+" -delete
+      cache:
+        ccache: true
+        directories:
+          - $HOME/Library/Caches/Homebrew
+          - /usr/local/Homebrew
       before_install:
-        - wget https://raw.githubusercontent.com/wyatt-howe/python-3.8.3-darwin/master/python-3.8.3-darwin.tar.bz2
-        - sudo tar xjf python-3.8.3-darwin.tar.bz2 --directory /  # install python from homebrew compatible archive
-        - sudo cp /usr/local/Cellar/python@3.8/3.8.3/bin/python3.8 /usr/local/bin/python  # overwrite the v2 link with v3.8
-install:
-  - python --version
-  - python -c 'from sys import maxsize; print("i386" if maxsize == 2**31-1 else "amd64")'
-  - python -m pip install -r requirements.txt
-script: python test.py
+        - brew update
+        - brew install ccache
+        - brew install openssl readline
+        - brew upgrade python@3.8
+        - sudo -H python3.8 -m pip install -U pip
+        - sudo -H python3.8 -m pip install -r requirements.txt
+      install:
+        - python3.8 --version
+        - python3.8 -c 'from sys import maxsize; print("i386" if maxsize == 2**31-1 else "amd64")'
+      script: python3.8 test.py
